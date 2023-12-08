@@ -1,0 +1,51 @@
+#!/bin/bash
+#
+# TODO: changes wallpaper for specific date from apod
+
+# extract the hd image url from official apod api
+LINK=`curl https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY | jq -r '.hdurl'`
+FOLDER=~/Downloads/Wallpapers/
+FILE=~/Downloads/Wallpapers/wallpaper.jpg
+WALLPAPER=file:///$HOME/Downloads/Wallpapers/wallpaper.jpg
+
+# check if the wallpaper folder exist
+if [ -f "$FOLDER" ]; then
+  continue
+else
+  mkdir -p $FOLDER # otherwise create the folder
+fi
+
+# check if file already exist and delete if exist
+if [ -f "$FILE" ]; then
+  rm $FILE
+  wget -cO ~/Downloads/Wallpapers/wallpaper.jpg $LINK
+fi
+
+if [ "$DESKTOP_SESSION" == "gnome" || "$XDG_DESKTOP_SESSION" == "gnome" ]; then
+  # changes the wallpaper for gnome desktop env
+  gsettings set org.gnome.desktop.background picture-uri $WALLPAPER #file:///$HOME/Downloads/Wallpapers/wallpaper.jpg # light mode
+  gsettings set org.gnome.desktop.background picture-uri-dark $WALLPAPER #file:///$HOME/Downloads/Wallpapers/wallpaper.jpg # dark mode
+  
+elif [ "$DESKTOP_SESSION" == "KDE" || "$XDG_DESKTOP_SESSION" == "KDE" ]; then
+  # for kde env
+    dbus-send --session --dest=org.kde.plasmashell --type=method_call \
+    /PlasmaShell org.kde.PlasmaShell.evaluateScript 'string:
+    var Desktops = desktops();
+    for (i=0;i<Desktops.length;i++) {
+          d = Desktops[i];
+          d.wallpaperPlugin = "org.kde.image";
+          d.currentConfigGroup = Array("Wallpaper", "org.kde.image", "General");
+          d.writeConfig("Image", "$WALLPAPER");
+    }'
+
+    # if the above method doesn't work
+    #qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript "
+     # var Desktops = desktops();
+     # print (Desktops);
+     # for (i=0;i<Desktops.length;i++) {
+     #     d = Desktops[i];
+     #     d.wallpaperPlugin = 'org.kde.image';
+     #     d.currentConfigGroup = Array('Wallpaper', 'org.kde.image', 'General');
+     #     d.writeConfig('Image', 'file:///home/cic/bouhannana.jpg')
+    #}"
+fi
