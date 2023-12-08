@@ -3,7 +3,8 @@ Fetches the wallpaper from official astronomial photo of the day and set it as a
 
 To download the app:
 ```sh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/thgoddo/main/install.sh)"
+
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/thegoddo/apod_wallpaper/main/install.sh)"
 ```
 
 To change wallpaper:
