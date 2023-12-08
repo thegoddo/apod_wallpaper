@@ -21,12 +21,12 @@ if [ -f "$FILE" ]; then
   wget -cO ~/Downloads/Wallpapers/wallpaper.jpg $LINK
 fi
 
-if [ "$DESKTOP_SESSION" == "gnome" || "$XDG_DESKTOP_SESSION" == "gnome" ]; then
+if [[ "$DESKTOP_SESSION" == "gnome" || "$XDG_DESKTOP_SESSION" == "gnome" ]]; then
   # changes the wallpaper for gnome desktop env
   gsettings set org.gnome.desktop.background picture-uri $WALLPAPER #file:///$HOME/Downloads/Wallpapers/wallpaper.jpg # light mode
   gsettings set org.gnome.desktop.background picture-uri-dark $WALLPAPER #file:///$HOME/Downloads/Wallpapers/wallpaper.jpg # dark mode
   
-elif [ "$DESKTOP_SESSION" == "KDE" || "$XDG_DESKTOP_SESSION" == "KDE" ]; then
+elif [[ "$DESKTOP_SESSION" == "KDE" || "$XDG_DESKTOP_SESSION" == "KDE" ]]; then
   # for kde env
     dbus-send --session --dest=org.kde.plasmashell --type=method_call \
     /PlasmaShell org.kde.PlasmaShell.evaluateScript 'string:
